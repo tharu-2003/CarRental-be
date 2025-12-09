@@ -1,5 +1,6 @@
 import { Router } from "express"
-import {  loginUser, refreshToken, registerUser } from "../controller/userController"
+import {  getUserData, loginUser, registerUser } from "../controller/userController"
+import { authenticate } from "../middleware/auth"
 
 
 const router = Router()
@@ -10,6 +11,8 @@ router.post("/register", registerUser)
 // login - public
 router.post("/login", loginUser)
 
-router.post("/refresh" , refreshToken)
+router.get("/data", authenticate, getUserData )
+
+// router.post("/refresh" , refreshToken)
 
 export default router
