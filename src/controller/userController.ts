@@ -111,7 +111,7 @@ export const getUserData = async (req: AUthRequest, res: Response) => {
     
     res.status(200).json({ message: "ok", data: user })
   } catch (error) {
-        return res.json({ success: false, message: error.message })
+        return res.json({ success: false, message: error })
   }
 }
 

@@ -2,11 +2,12 @@ import { Request, Response } from "express"
 import { User } from "../models/User";
 import { v2 as cloudinary } from "cloudinary";
 import { Car } from "../models/Car";
+import { AUthRequest } from "../middleware/auth";
 
 
 
 // Api to Change Role of User
-export const changeRoleToOwner = async (req:Request, res:Response)=>{
+export const changeRoleToOwner = async (req:AUthRequest, res:Response)=>{
     try {
         const {_id} = req.user;
         await User.findByIdAndUpdate(_id, {role: "OWNER"})
@@ -20,7 +21,7 @@ export const changeRoleToOwner = async (req:Request, res:Response)=>{
 }
 
 // Api to List Car
-export const addCar = async (req:Request, res:Response)=>{
+export const addCar = async (req:AUthRequest, res:Response)=>{
     try {
         const {_id} = req.user;
         let car = JSON.parse(req.body.carData);
@@ -64,7 +65,7 @@ export const addCar = async (req:Request, res:Response)=>{
 }
 
 // Api to List Owner Cars
-export const getOwnerCars = async (req:Request, res:Response)=>{
+export const getOwnerCars = async (req:AUthRequest, res:Response)=>{
     try {
         const {_id} = req.user;
         const cars = await Car.find({owner: _id})
@@ -83,7 +84,7 @@ export const getOwnerCars = async (req:Request, res:Response)=>{
 }
 
 // Api to Toggle Car Availability
-export const toggleCarAvailability = async (req:Request, res:Response)=>{
+export const toggleCarAvailability = async (req:AUthRequest, res:Response)=>{
     try {
         const {_id} = req.user;
         const {carId} = req.body;
@@ -110,7 +111,7 @@ export const toggleCarAvailability = async (req:Request, res:Response)=>{
 }
 
 // Api to Delete a Car
-export const deleteCar = async (req:Request, res:Response)=>{
+export const deleteCar = async (req:AUthRequest, res:Response)=>{
     try {
         const {_id} = req.user;
         const {carId} = req.body;
