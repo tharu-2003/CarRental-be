@@ -4,6 +4,8 @@ import cors from "cors"
 import mongoose from "mongoose"
 
 import userRouter from "./routes/userRoutes"
+import ownerRouter from "./routes/ownerRoutes"
+import connectCloudinary from "./config/cloudinary"
 
 dotenv.config()
 
@@ -24,12 +26,15 @@ mongoose
     process.exit(1)
   })
 
+  connectCloudinary()
+
 // Middleware
 app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res)=> res.send('Server is running'))
-
 app.use("/api/v1/user", userRouter)
+app.use('/api/v1/owner', ownerRouter)
+
 
 app.listen(PORT, ()=> console.log(`Server running on port ${PORT}`))
