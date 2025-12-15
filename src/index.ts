@@ -6,6 +6,7 @@ import mongoose from "mongoose"
 import userRouter from "./routes/userRoutes"
 import ownerRouter from "./routes/ownerRoutes"
 import connectCloudinary from "./config/cloudinary"
+import bookingRouter from "./routes/bookingRoutes"
 
 dotenv.config()
 
@@ -35,6 +36,7 @@ app.use(express.json());
 app.get('/', (req, res)=> res.send('Server is running'))
 app.use("/api/v1/user", userRouter)
 app.use('/api/v1/owner', ownerRouter)
+app.use('/api/v1/bookings', bookingRouter)
 
 
 app.listen(PORT, ()=> console.log(`Server running on port ${PORT}`))

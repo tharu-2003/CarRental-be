@@ -3,6 +3,7 @@ import { User } from "../models/User";
 import { v2 as cloudinary } from "cloudinary";
 import { Car } from "../models/Car";
 import { AUthRequest } from "../middleware/auth";
+import { Booking } from "../models/Booking";
 
 
 
@@ -149,10 +150,24 @@ export const getDashboardData = async (req:Request, res:Response)=>{
         }
 
         const cars = await Car.find({owner: _id})
+        const bookings = await Booking.find({owner: _id}).populate('car').sort({ createdAt: -1 })
         
-        res.status(200).json({
-            message: "Availability Toggled",
-        })
+        const pendingBookings = await Booking.find({owner: _id, status: 'PENDING'})
+        const completedBookings = await Booking.find({owner: _id, status: 'CONFIRMED'})
+        
+        // Calculate monthlyRevenue from bookings where status is confirmed
+        const monthlyRevenue = bookings.slice().filter(booking => booking.status === 'CONFIRMED' ).reduce((acc, booking)=> acc + booking.price, 0)
+
+        const dashboardData = {
+            totalCars: cars.length,
+            totalBookings: bookings.length,
+            pendingBookings: pendingBookings.length,
+            completedBookings: completedBookings.length,
+            recentBookings: bookings.slice(0,3),
+            monthlyRevenue
+        }
+
+        res.json({ success: true, dashboardData })
         
     } catch (error) {
         console.error(error);
