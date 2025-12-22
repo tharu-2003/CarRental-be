@@ -31,6 +31,7 @@ export const checkAvailabilityofCar = async (req:Request, res:Response) => {
         availableCars = availableCars.filter(car => car.isAvailable === true)
 
         res.status(200).json({
+            success: true,
             message: "Available Cars",
             data: availableCars,
         })
@@ -38,6 +39,7 @@ export const checkAvailabilityofCar = async (req:Request, res:Response) => {
     } catch (error) {
         console.error(error)
         res.status(500).json({
+            success: false,
             message: error,
         });
     }
@@ -65,13 +67,15 @@ export const createBooking = async (req:Request, res:Response) => {
         await Booking.create({car, owner: carData?.owner, user:_id, pickupDate, returnDate, price})
 
         res.status(201).json({
-        message: "Booking created successfully!",
-        
-    });
+            success: true,
+            message: "Booking created successfully!",
+            
+        });
 
     } catch (error) {
         console.error(error)
         res.status(500).json({
+            success: false,
             message: error,
         });
     }
@@ -85,12 +89,14 @@ export const getUserBookings = async (req:Request, res:Response) => {
         const bookings = await Booking.find({ user: _id}).populate("car").sort({createdAt: -1})
 
         res.status(200).json({
+            success: true,
             message: "User Bookings",
             data: bookings
         })
     } catch (error) {
         console.error(error)
         res.status(500).json({
+            success: false,
             message: error,
         });
     }
@@ -104,12 +110,14 @@ export const getOwnerBookings = async (req:Request, res:Response) => {
         }
         const bookings = await Booking.find({owner: req.user._id}).populate('car user').select('-user.password').sort({createdAt: -1})
         res.status(200).json({
+            success: true,
             message: "Owner Bookings",
             data: bookings
         })
     } catch (error) {
         console.error(error)
         res.status(500).json({
+            success: false,
             message: error,
         });
     }
@@ -131,11 +139,13 @@ export const changeBookingStatus = async (req:Request, res:Response) => {
         await booking?.save()
 
         res.status(200).json({
+            success: true,
             message: "Status Updated",
         });
     } catch (error) {
         console.error(error)
         res.status(500).json({
+            success: false,
             message: error,
         });
     }

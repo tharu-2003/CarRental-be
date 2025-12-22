@@ -22,7 +22,7 @@ export const registerUser = async (req:Request, res:Response )=>{
 
         const userExists = await User.findOne({email})
         if(userExists){
-            return res.status(400).json({ message: "Email exists" })
+            return res.status(400).json({ success: false, message: "Email exists" })
         }
 
         const hashedPassword = await bcrypt.hash(password, 10)
@@ -33,6 +33,7 @@ export const registerUser = async (req:Request, res:Response )=>{
         const token = generateToken(user._id.toString())
 
         res.status(201).json({
+            success: true,
             message: "User registed",
             data: { 
                 email: user.email, 
@@ -46,7 +47,8 @@ export const registerUser = async (req:Request, res:Response )=>{
     } catch (error) {
         console.error(error)
         res.status(500).json({
-        message: "Internal; server error"
+          success: false,
+          message: "Internal; server error"
         })
     }
 }
@@ -57,12 +59,12 @@ export const loginUser = async (req: Request, res: Response) => {
 
     const user = (await User.findOne({ email })) as IUSER | null
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" })
+      return res.status(401).json({ success: false, message: "Invalid credentials" })
     }
 
     const valid = await bcrypt.compare(password, user.password)
     if (!valid) {
-      return res.status(401).json({ message: "Invalid credentials" })
+      return res.status(401).json({ success: false, message: "Invalid credentials" })
     }
 
     // const accessToken = signAccessToken(user)
@@ -71,6 +73,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
 
     res.status(200).json({
+      success: true,
       message: "success",
       data: {
         email: user.email,
@@ -83,6 +86,7 @@ export const loginUser = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err)
     res.status(500).json({
+      success: false,
       message: "Internal; server error"
     })
   }
@@ -90,26 +94,27 @@ export const loginUser = async (req: Request, res: Response) => {
 
 // export const getUserData = async (req: AUthRequest, res: Response) => {
 //   if (!req.user) {
-//     return res.status(401).json({ message: "Unauthorized" })
+//     return res.status(401).json({success: false, message: "Unauthorized" })
 //   }
 //   const user = await User.findById(req.user.sub).select("-password")
 
 //   if (!user) {
 //     return res.status(404).json({
+//       success: false,
 //       message: "User not found"
 //     })
 //   }
 
 //   const { email, _id } = user as IUSER
 
-//   res.status(200).json({ message: "ok", data: user })
+//   res.status(200).json({success: true, message: "ok", data: user })
 // }
 
 export const getUserData = async (req: AUthRequest, res: Response) => {
   try {
     const {user} = req
     
-    res.status(200).json({ message: "ok", data: user })
+    res.status(200).json({ success: true, message: "ok", data: user })
   } catch (error) {
         return res.json({ success: false, message: error })
   }
@@ -120,7 +125,7 @@ export const getUserData = async (req: AUthRequest, res: Response) => {
 //     const {token } =req.body
 
 //     if(!token){
-//       return res.status(400).json({message: "Token required"})
+//       return res.status(400).json({ success: false, message: "Token required"})
 //     }
 
 //     // import jwt from "jsonwebtoken"
@@ -128,15 +133,16 @@ export const getUserData = async (req: AUthRequest, res: Response) => {
 //     const user = await User.findById(payload.sub)
 
 //     if(!user){
-//       return res.status(403).json({ message: "Invalid or expire token"})
+//       return res.status(403).json({ success: false, message: "Invalid or expire token"})
 //     }
 //     const accessToken = signAccessToken(user)
 
 //     res.status(200).json({
+//       success: true,
 //       accessToken
 //     })
 
 //   }catch(err){
-//     res.status(403).json({message: "Invalid or expire token"})
+//     res.status(403).json({ success: false, message: "Invalid or expire token"})
 //   }
 // }

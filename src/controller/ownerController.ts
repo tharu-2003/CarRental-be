@@ -16,6 +16,7 @@ export const changeRoleToOwner = async (req:AUthRequest, res:Response)=>{
     } catch (error) {
         console.error(error);
         res.status(500).json({
+            success: false,
             message: error,
         });
     }
@@ -52,6 +53,7 @@ export const addCar = async (req:AUthRequest, res:Response)=>{
         await Car.create({...car, owner: _id, image})
 
         res.status(201).json({
+            success: true,
             message: "Car Added successfully!",
             data: image,
         });
@@ -60,6 +62,7 @@ export const addCar = async (req:AUthRequest, res:Response)=>{
     } catch (error) {
         console.error(error);
         res.status(500).json({
+            success: false,
             message: error,
         });
     }
@@ -72,6 +75,7 @@ export const getOwnerCars = async (req:AUthRequest, res:Response)=>{
         const cars = await Car.find({owner: _id})
         
         res.status(200).json({
+            success: true,
             message: "Cars data",
             data: cars
         })
@@ -79,6 +83,7 @@ export const getOwnerCars = async (req:AUthRequest, res:Response)=>{
     } catch (error) {
         console.error(error);
         res.status(500).json({
+            success: false,
             message: error,
         });
     }
@@ -100,12 +105,14 @@ export const toggleCarAvailability = async (req:AUthRequest, res:Response)=>{
         await car.save()
         
         res.status(200).json({
+            success: true,
             message: "Availability Toggled",
         })
         
     } catch (error) {
         console.error(error);
         res.status(500).json({
+            success: false,
             message: error,
         });
     }
@@ -129,12 +136,14 @@ export const deleteCar = async (req:AUthRequest, res:Response)=>{
         await car.save()
         
         res.status(200).json({
+            success: true,
             message: "Car Removed",
         })
         
     } catch (error) {
         console.error(error);
         res.status(500).json({
+            success: false,
             message: error,
         });
     }
@@ -172,6 +181,7 @@ export const getDashboardData = async (req:Request, res:Response)=>{
     } catch (error) {
         console.error(error);
         res.status(500).json({
+            success: false,
             message: error,
         });
     }
@@ -209,6 +219,7 @@ export const updateUserImage = async (req:Request, res:Response) => {
         await User.findByIdAndUpdate(_id, {image})
 
         res.status(201).json({
+            success: true,
             message: "Image Updated successfully!",
             data: image,
         });
@@ -216,6 +227,7 @@ export const updateUserImage = async (req:Request, res:Response) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({
+            success: false,
             message: error,
         });
     }
