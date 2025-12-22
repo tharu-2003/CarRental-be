@@ -176,3 +176,47 @@ export const getDashboardData = async (req:Request, res:Response)=>{
         });
     }
 }
+
+
+// Api to update user image
+
+export const updateUserImage = async (req:Request, res:Response) => {
+    try {
+        const {_id } = req.user;
+        const imageFile = req.file;
+
+        let image = "";
+
+
+        // Upload Image to cloudinary
+        if (imageFile) {
+
+            const result:any = await new Promise((resole, reject) => {
+                const upload_stream = cloudinary.uploader.upload_stream(
+                    {folder: "users"},
+                    (error, result) => {
+                        if(error) {
+                            return reject(error)
+                        }
+                        resole(result) // success return
+                    }
+                )
+                upload_stream.end(imageFile?.buffer)
+            })
+            image = result.secure_url
+        }
+
+        await User.findByIdAndUpdate(_id, {image})
+
+        res.status(201).json({
+            message: "Image Updated successfully!",
+            data: image,
+        });
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: error,
+        });
+    }
+}
