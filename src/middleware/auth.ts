@@ -52,14 +52,14 @@ export const authenticate = async (
 ) => {
   const token = req.headers.authorization
   if (!token) {
-    return res.status(401).json({ message: "No token provided" })
+    return res.json({ success: false, message: "No token provided" })
   }
   
   try {
     const userId = jwt.decode(token, JWT_SECRET)
 
     if(!userId){
-      return res.status(401).json({ message: "No token provided" })
+      return res.json({ success: false, message: "No token provided" })
     }
 
     req.user = await User.findById(userId).select('-password')
@@ -67,7 +67,8 @@ export const authenticate = async (
 
   } catch (err) {
     console.error(err)
-    res.status(401).json({
+    res.json({
+      success: false,
       message: "Invalid or expire token"
     })
   }

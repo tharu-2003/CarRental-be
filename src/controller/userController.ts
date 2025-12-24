@@ -4,6 +4,7 @@ import { User, IUSER } from "../models/User"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import { AUthRequest } from "../middleware/auth"
+import { Car } from "../models/Car"
 
 // const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string
 
@@ -22,7 +23,7 @@ export const registerUser = async (req:Request, res:Response )=>{
 
         const userExists = await User.findOne({email})
         if(userExists){
-            return res.status(400).json({ success: false, message: "Email exists" })
+            return res.json({ success: false, message: "User already exists" })
         }
 
         const hashedPassword = await bcrypt.hash(password, 10)
@@ -34,21 +35,14 @@ export const registerUser = async (req:Request, res:Response )=>{
 
         res.status(201).json({
             success: true,
-            message: "User registed",
-            data: { 
-                email: user.email, 
-                role: user.role,
-                // accessToken,
-                // refreshToken 
-                token
-            }
+            token
         })
 
     } catch (error) {
         console.error(error)
-        res.status(500).json({
+        res.json({
           success: false,
-          message: "Internal; server error"
+          message: error.message
         })
     }
 }
@@ -59,12 +53,12 @@ export const loginUser = async (req: Request, res: Response) => {
 
     const user = (await User.findOne({ email })) as IUSER | null
     if (!user) {
-      return res.status(401).json({ success: false, message: "Invalid credentials" })
+      return res.json({ success: false, message: "Invalid credentials" })
     }
 
     const valid = await bcrypt.compare(password, user.password)
     if (!valid) {
-      return res.status(401).json({ success: false, message: "Invalid credentials" })
+      return res.json({ success: false, message: "Invalid credentials" })
     }
 
     // const accessToken = signAccessToken(user)
@@ -74,14 +68,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: "success",
-      data: {
-        email: user.email,
-        role: user.role,
-        // accessToken,
-        // refreshToken
-        token
-      }
+      token
     })
   } catch (err) {
     console.error(err)
@@ -114,9 +101,22 @@ export const getUserData = async (req: AUthRequest, res: Response) => {
   try {
     const {user} = req
     
-    res.status(200).json({ success: true, message: "ok", data: user })
+    res.status(200).json({ success: true, user })
   } catch (error) {
-        return res.json({ success: false, message: error })
+      console.error(error)
+      res.json({ success: false, message: error })
+  }
+}
+
+// Get All Cars for the Frontend
+export const getCars = async (req: AUthRequest, res: Response) => {
+  try {
+      const cars = await Car.find({isAvailable: true})
+      res.json({ success: true, cars })
+
+  } catch (error) {
+      console.error(error)
+      res.json({ success: false, message: error })
   }
 }
 
