@@ -17,7 +17,7 @@ export const changeRoleToOwner = async (req:AUthRequest, res:Response)=>{
         console.error(error);
         res.status(500).json({
             success: false,
-            message: error,
+            message: error.message,
         });
     }
 }
@@ -63,7 +63,7 @@ export const addCar = async (req:AUthRequest, res:Response)=>{
         console.error(error);
         res.status(500).json({
             success: false,
-            message: error,
+            message: error.message,
         });
     }
 }
@@ -84,7 +84,7 @@ export const getOwnerCars = async (req:AUthRequest, res:Response)=>{
         console.error(error);
         res.status(500).json({
             success: false,
-            message: error,
+            message: error.message,
         });
     }
 }
@@ -113,7 +113,7 @@ export const toggleCarAvailability = async (req:AUthRequest, res:Response)=>{
         console.error(error);
         res.status(500).json({
             success: false,
-            message: error,
+            message: error.message,
         });
     }
 }
@@ -144,7 +144,7 @@ export const deleteCar = async (req:AUthRequest, res:Response)=>{
         console.error(error);
         res.status(500).json({
             success: false,
-            message: error,
+            message: error.message,
         });
     }
 }
@@ -154,7 +154,7 @@ export const getDashboardData = async (req:Request, res:Response)=>{
     try {
         const {_id, role } = req.user;
         
-        if(role !== 'OWNER' ){
+        if(role[0] !== 'OWNER' ){
             return res.json({ success: false, message: "Unauthorized"})
         }
 
@@ -182,7 +182,7 @@ export const getDashboardData = async (req:Request, res:Response)=>{
         console.error(error);
         res.status(500).json({
             success: false,
-            message: error,
+            message: error.message,
         });
     }
 }
@@ -228,7 +228,7 @@ export const updateUserImage = async (req:Request, res:Response) => {
         console.error(error);
         res.status(500).json({
             success: false,
-            message: error,
+            message: error.message,
         });
     }
 }

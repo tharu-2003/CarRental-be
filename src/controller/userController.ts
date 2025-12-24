@@ -74,7 +74,7 @@ export const loginUser = async (req: Request, res: Response) => {
     console.error(err)
     res.status(500).json({
       success: false,
-      message: "Internal; server error"
+      message: err.message
     })
   }
 }
@@ -104,7 +104,7 @@ export const getUserData = async (req: AUthRequest, res: Response) => {
     res.status(200).json({ success: true, user })
   } catch (error) {
       console.error(error)
-      res.json({ success: false, message: error })
+      res.json({ success: false, message: error.message })
   }
 }
 
@@ -116,7 +116,7 @@ export const getCars = async (req: AUthRequest, res: Response) => {
 
   } catch (error) {
       console.error(error)
-      res.json({ success: false, message: error })
+      res.json({ success: false, message: error.message })
   }
 }
 

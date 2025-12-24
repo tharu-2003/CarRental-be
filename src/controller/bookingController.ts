@@ -40,7 +40,7 @@ export const checkAvailabilityofCar = async (req:Request, res:Response) => {
         console.error(error)
         res.status(500).json({
             success: false,
-            message: error,
+            message: error.message,
         });
     }
 }
@@ -76,7 +76,7 @@ export const createBooking = async (req:Request, res:Response) => {
         console.error(error)
         res.status(500).json({
             success: false,
-            message: error,
+            message: error.message,
         });
     }
 }
@@ -97,7 +97,7 @@ export const getUserBookings = async (req:Request, res:Response) => {
         console.error(error)
         res.status(500).json({
             success: false,
-            message: error,
+            message: error.message,
         });
     }
 }
@@ -105,7 +105,7 @@ export const getUserBookings = async (req:Request, res:Response) => {
 // Api to List Owner Bookings
 export const getOwnerBookings = async (req:Request, res:Response) => {
     try {
-        if(req.user.role !== 'OWNER'){
+        if(req.user.role[0] !== 'OWNER'){
             return res.json({ success: false, message: 'Unauthorized'})
         }
         const bookings = await Booking.find({owner: req.user._id}).populate('car user').select('-user.password').sort({createdAt: -1})
@@ -118,7 +118,7 @@ export const getOwnerBookings = async (req:Request, res:Response) => {
         console.error(error)
         res.status(500).json({
             success: false,
-            message: error,
+            message: error.message,
         });
     }
 }
@@ -146,7 +146,7 @@ export const changeBookingStatus = async (req:Request, res:Response) => {
         console.error(error)
         res.status(500).json({
             success: false,
-            message: error,
+            message: error.message,
         });
     }
 } 
