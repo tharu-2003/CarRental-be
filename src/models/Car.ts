@@ -5,7 +5,7 @@ const { ObjectId } = mongoose.Schema.Types
 export interface ICAR extends Document {
   owner: mongoose.Types.ObjectId
   brand: string
-  modelName: string
+  model: string
   image: string
   year: number
   category: string
@@ -20,7 +20,7 @@ export interface ICAR extends Document {
 const carSchema = new Schema<ICAR>({
     owner: { type: ObjectId, ref: 'User'},
     brand: { type: String, required:true, unique:true },
-    modelName: { type: String, required:true },
+    model: { type: String, required:true },
     image: { type: String, required:true },
     year: { type: Number, required:true },
     category: { type: String, required:true },
