@@ -161,11 +161,15 @@ export const getDashboardData = async (req:Request, res:Response)=>{
         const cars = await Car.find({owner: _id})
         const bookings = await Booking.find({owner: _id}).populate('car').sort({ createdAt: -1 })
         
-        const pendingBookings = await Booking.find({owner: _id, status: 'PENDING'})
-        const completedBookings = await Booking.find({owner: _id, status: 'CONFIRMED'})
+        // const pendingBookings = await Booking.find({owner: _id, status: 'PENDING'})
+        // const completedBookings = await Booking.find({owner: _id, status: 'CONFIRMED'})
         
+        const pendingBookings = await Booking.find({ owner: _id, status: { $in: ['PENDING'] } });
+        const completedBookings = await Booking.find({ owner: _id, status: { $in: ['CONFIRMED'] } });
+
         // Calculate monthlyRevenue from bookings where status is confirmed
-        const monthlyRevenue = bookings.slice().filter(booking => booking.status === 'CONFIRMED' ).reduce((acc, booking)=> acc + booking.price, 0)
+        const monthlyRevenue = bookings.filter(booking => booking.status.includes('CONFIRMED')).reduce((acc, booking) => acc + booking.price, 0);
+
 
         const dashboardData = {
             totalCars: cars.length,

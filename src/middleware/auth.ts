@@ -51,6 +51,7 @@ export const authenticate = async (
   next: NextFunction
 ) => {
   const token = req.headers.authorization
+  
   if (!token) {
     return res.json({ success: false, message: "No token provided" })
   }

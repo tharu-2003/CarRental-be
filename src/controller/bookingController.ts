@@ -53,7 +53,7 @@ export const createBooking = async (req:Request, res:Response) => {
 
         const isAvailable = await checkAvailability(car, pickupDate, returnDate)
         if(!isAvailable){
-            res.json({success: false, message: "Car is not available"})
+            return res.json({success: false, message: "Car is not available"})
         }
 
         const carData = await Car.findById(car)
@@ -69,12 +69,11 @@ export const createBooking = async (req:Request, res:Response) => {
         res.status(201).json({
             success: true,
             message: "Booking created successfully!",
-            
         });
 
     } catch (error) {
         console.error(error)
-        res.status(500).json({
+        res.json({
             success: false,
             message: error.message,
         });
@@ -131,11 +130,11 @@ export const changeBookingStatus = async (req:Request, res:Response) => {
 
         const booking = await Booking.findById(bookingId)
 
-        if(booking.owner.toString() !== _id){
+        if(booking.owner.toString() !== _id.toString()){
             return res.json({ success: false, message: 'Unauthorized'})
         }
 
-        booking.status = status;
+        booking.status = [status];
         await booking?.save()
 
         res.status(200).json({
