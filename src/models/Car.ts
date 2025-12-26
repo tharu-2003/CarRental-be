@@ -19,7 +19,7 @@ export interface ICAR extends Document {
 }
 const carSchema = new Schema<ICAR>({
     owner: { type: ObjectId, ref: 'User'},
-    brand: { type: String, required:true, unique:true },
+    brand: { type: String, required:true },
     model: { type: String, required:true },
     image: { type: String, required:true },
     year: { type: Number, required:true },

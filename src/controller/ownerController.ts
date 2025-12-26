@@ -61,7 +61,7 @@ export const addCar = async (req:AUthRequest, res:Response)=>{
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        res.json({
             success: false,
             message: error.message,
         });
@@ -77,12 +77,12 @@ export const getOwnerCars = async (req:AUthRequest, res:Response)=>{
         res.status(200).json({
             success: true,
             message: "Cars data",
-            data: cars
+            cars
         })
         
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        res.json({
             success: false,
             message: error.message,
         });

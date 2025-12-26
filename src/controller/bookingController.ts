@@ -13,7 +13,6 @@ const checkAvailability = async (car, pickupDate, returnDate) =>{
 }
 
 // Api to Check Availability of Cars for the given Date and location
-
 export const checkAvailabilityofCar = async (req:Request, res:Response) => {
     try {
         const {location, pickupDate, returnDate } = req.body
@@ -22,9 +21,10 @@ export const checkAvailabilityofCar = async (req:Request, res:Response) => {
         const cars = await Car.find({location, isAvailable: true})
 
         // check car availability for the given date range using promise
-        const availableCarsPromises = cars.map(async () =>{
+        const availableCarsPromises = cars.map(async (car) =>{
             const isAvailable = await checkAvailability(car._id, pickupDate, returnDate)
-            return {...cars._doc, isAvailable: isAvailable}
+            // return {...cars._doc, isAvailable: isAvailable}
+            return { ...car.toObject(), isAvailable };
         })
         
         let availableCars = await Promise.all(availableCarsPromises);
@@ -33,12 +33,12 @@ export const checkAvailabilityofCar = async (req:Request, res:Response) => {
         res.status(200).json({
             success: true,
             message: "Available Cars",
-            data: availableCars,
+            availableCars,
         })
 
     } catch (error) {
         console.error(error)
-        res.status(500).json({
+        res.json({
             success: false,
             message: error.message,
         });
@@ -91,7 +91,7 @@ export const getUserBookings = async (req:Request, res:Response) => {
         res.status(200).json({
             success: true,
             message: "User Bookings",
-            data: bookings
+            bookings
         })
     } catch (error) {
         console.error(error)
@@ -112,7 +112,7 @@ export const getOwnerBookings = async (req:Request, res:Response) => {
         res.status(200).json({
             success: true,
             message: "Owner Bookings",
-            data: bookings
+            bookings
         })
     } catch (error) {
         console.error(error)
