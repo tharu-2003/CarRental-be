@@ -6,12 +6,12 @@ import jwt from "jsonwebtoken"
 import { AUthRequest } from "../middleware/auth"
 import { Car } from "../models/Car"
 
-// const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string
 
-const generateToken = (userId: any)=>{
-    const payload = userId
-    return jwt.sign(payload, process.env.JWT_SECRET as string)
-}
+// const generateAccessToken = (userId: any)=>{
+//     const payload = userId
+//     return jwt.sign(payload, process.env.JWT_SECRET as string)
+// }
 
 export const registerUser = async (req:Request, res:Response )=>{
     try {
@@ -29,13 +29,13 @@ export const registerUser = async (req:Request, res:Response )=>{
         const hashedPassword = await bcrypt.hash(password, 10)
         const user = await User.create({name, email, password: hashedPassword})
 
-        // const accessToken = signAccessToken(user)
         // const refreshToken = signRefreshToken(user) 
-        const token = generateToken(user._id.toString())
+        const accessToken = signAccessToken(user)
+        // const accessToken = generateAccessToken(user._id.toString())
 
         res.status(201).json({
             success: true,
-            token
+            accessToken
         })
 
     } catch (error) {
@@ -61,14 +61,14 @@ export const loginUser = async (req: Request, res: Response) => {
       return res.json({ success: false, message: "Invalid credentials" })
     }
 
-    // const accessToken = signAccessToken(user)
     // const refreshToken = signRefreshToken(user)
-    const token = generateToken(user._id.toString())
+    const accessToken = signAccessToken(user)
+    // const accessToken = generateAccessToken(user._id.toString())
 
 
     res.status(200).json({
       success: true,
-      token
+      accessToken
     })
   } catch (err) {
     console.error(err)
@@ -78,24 +78,6 @@ export const loginUser = async (req: Request, res: Response) => {
     })
   }
 }
-
-// export const getUserData = async (req: AUthRequest, res: Response) => {
-//   if (!req.user) {
-//     return res.status(401).json({success: false, message: "Unauthorized" })
-//   }
-//   const user = await User.findById(req.user.sub).select("-password")
-
-//   if (!user) {
-//     return res.status(404).json({
-//       success: false,
-//       message: "User not found"
-//     })
-//   }
-
-//   const { email, _id } = user as IUSER
-
-//   res.status(200).json({success: true, message: "ok", data: user })
-// }
 
 export const getUserData = async (req: AUthRequest, res: Response) => {
   try {

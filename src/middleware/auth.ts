@@ -39,6 +39,8 @@ import { NextFunction, Request, Response } from "express"
 import jwt from "jsonwebtoken"
 import { User } from "../models/User"
 
+
+
 const JWT_SECRET = process.env.JWT_SECRET as any
 
 export interface AUthRequest extends Request {
@@ -50,14 +52,19 @@ export const authenticate = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.headers.authorization
+  const authHeader = req.headers.authorization
   
-  if (!token) {
+  if (!authHeader) {
     return res.json({ success: false, message: "No token provided" })
   }
+
+  const token = authHeader.split(" ")[1] // ["Bearer", "dgcfhvgjygukhiluytkuy"]
   
   try {
-    const userId = jwt.decode(token, JWT_SECRET)
+    // const userId = jwt.decode(token, JWT_SECRET)
+
+    const decoded: any = jwt.verify(token, JWT_SECRET);  // verifies + checks expiry
+    const userId = decoded.sub;   // because you used sub in token
 
     if(!userId){
       return res.json({ success: false, message: "No token provided" })
