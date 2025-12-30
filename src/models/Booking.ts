@@ -8,7 +8,7 @@ export enum Status {
   CANCELLED = "CANCELLED"
 }
 
-export interface IBOOKING extends Document {
+export interface IBOOKING {
     car: mongoose.Types.ObjectId
     user: mongoose.Types.ObjectId
     owner: mongoose.Types.ObjectId

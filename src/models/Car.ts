@@ -1,8 +1,8 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const { ObjectId } = mongoose.Schema.Types
 
-export interface ICAR extends Document {
+export interface ICAR  {
   owner: mongoose.Types.ObjectId
   brand: string
   model: string
