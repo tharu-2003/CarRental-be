@@ -1,5 +1,5 @@
 import { Router } from "express"
-import {  getCars, getUserData, loginUser, registerUser } from "../controller/userController"
+import {  getCars, getUserData, loginUser, refreshToken, registerUser } from "../controller/userController"
 import { authenticate } from "../middleware/auth"
 
 
@@ -10,6 +10,6 @@ router.post("/login", loginUser)
 router.get("/data", authenticate, getUserData )
 router.get("/cars", getCars )
 
-// router.post("/refresh" , refreshToken)
+router.post("/refresh" , refreshToken)
 
 export default router

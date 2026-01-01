@@ -10,7 +10,8 @@ export const signAccessToken = (user: IUSER): string => {
   return jwt.sign(
   { 
     sub: user._id.toString(), 
-    roles: user.role
+    // roles: user.role
+    role: user.role
   }, 
   JWT_SECRET, 
   {
@@ -25,6 +26,6 @@ export const signRefreshToken =  (user: IUSER): string => {
       sub: user._id.toString
     },
     JWT_REFRESH_SECRET,
-    {expiresIn: "7d"}
+    {expiresIn: "1m"}
   )
 }

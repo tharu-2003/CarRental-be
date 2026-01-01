@@ -5,6 +5,7 @@
 // import { AuthRequest } from "../middleware/auth"
 // import { Car } from "../models/Car"
 
+// const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string
 
 // export const registerUser = async (req:Request, res:Response )=>{
 //     try {
@@ -128,6 +129,12 @@ import { User, IUSER } from "../models/User";
 import bcrypt from "bcryptjs";
 import { AuthRequest } from "../middleware/auth";
 import { Car, ICAR } from "../models/Car"; // assuming ICAR interface exists
+import jwt from "jsonwebtoken"
+import dotenv from "dotenv";
+
+dotenv.config()
+
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string
 
 // Register User
 export const registerUser = async (req: Request, res: Response): Promise<Response> => {
@@ -146,13 +153,14 @@ export const registerUser = async (req: Request, res: Response): Promise<Respons
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ name, email, password: hashedPassword });
 
-    // const refreshToken = signRefreshToken(user)
+    const refreshToken = signRefreshToken(user)
     const accessToken = signAccessToken(user);
     // const accessToken = generateAccessToken(user._id.toString())
 
     return res.status(201).json({
       success: true,
       accessToken,
+      refreshToken
     });
   } catch (error: any) {
     console.error(error);
@@ -178,13 +186,14 @@ export const loginUser = async (req: Request, res: Response): Promise<Response> 
       return res.json({ success: false, message: "Invalid credentials" });
     }
 
-    // const refreshToken = signRefreshToken(user)
+    const refreshToken = signRefreshToken(user)
     const accessToken = signAccessToken(user);
     // const accessToken = generateAccessToken(user._id.toString())
 
     return res.status(200).json({
       success: true,
       accessToken,
+      refreshToken
     });
   } catch (err: any) {
     console.error(err);
@@ -218,29 +227,29 @@ export const getCars = async (req: Request, res: Response): Promise<Response> =>
   }
 };
 
-// export const refreshToken = async (req:Request, res:Response) => {
-//   try{
-//     const {token } =req.body
+export const refreshToken = async (req:Request, res:Response) => {
+  try{
+    const {token } =req.body
 
-//     if(!token){
-//       return res.status(400).json({ success: false, message: "Token required"})
-//     }
+    if(!token){
+      return res.status(400).json({ success: false, message: "Token required"})
+    }
 
-//     // import jwt from "jsonwebtoken"
-//     const payload: any = jwt.verify(token, JWT_REFRESH_SECRET)
-//     const user = await User.findById(payload.sub)
+    // import jwt from "jsonwebtoken"
+    const payload: any = jwt.verify(token, JWT_REFRESH_SECRET)
+    const user = await User.findById(payload.sub)
 
-//     if(!user){
-//       return res.status(403).json({ success: false, message: "Invalid or expire token"})
-//     }
-//     const accessToken = signAccessToken(user)
+    if(!user){
+      return res.status(403).json({ success: false, message: "Invalid or expire token"})
+    }
+    const accessToken = signAccessToken(user)
 
-//     res.status(200).json({
-//       success: true,
-//       accessToken
-//     })
+    res.status(200).json({
+      success: true,
+      accessToken
+    })
 
-//   }catch(err){
-//     res.status(403).json({ success: false, message: "Invalid or expire token"})
-//   }
-// }
+  }catch(err){
+    res.status(403).json({ success: false, message: "Invalid or expire token"})
+  }
+}
