@@ -155,18 +155,17 @@ export const registerUser = async (req: Request, res: Response): Promise<Respons
 
     const refreshToken = signRefreshToken(user)
     const accessToken = signAccessToken(user);
-    // const accessToken = generateAccessToken(user._id.toString())
 
     return res.status(201).json({
       success: true,
       accessToken,
       refreshToken
     });
-  } catch (error: any) {
-    console.error(error);
-    return res.json({
+  } catch (err: any) {
+    console.error(err);
+    return res.status(500).json({
       success: false,
-      message: error.message,
+      message: err.message,
     });
   }
 };
@@ -188,7 +187,6 @@ export const loginUser = async (req: Request, res: Response): Promise<Response> 
 
     const refreshToken = signRefreshToken(user)
     const accessToken = signAccessToken(user);
-    // const accessToken = generateAccessToken(user._id.toString())
 
     return res.status(200).json({
       success: true,

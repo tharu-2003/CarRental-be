@@ -26,6 +26,6 @@ export const signRefreshToken =  (user: IUSER): string => {
       sub: user._id.toString
     },
     JWT_REFRESH_SECRET,
-    {expiresIn: "1m"}
+    {expiresIn: "7d"}
   )
 }
