@@ -18,8 +18,12 @@ export const authenticate = async (
   const authHeader = req.headers.authorization
   
   if (!authHeader) {
-    return res.json({ success: false, message: "No token provided" })
+    return res.status(401).json({ 
+      success: false, 
+      message: "No token provided" 
+    })
   }
+
 
   const token = authHeader.split(" ")[1] // ["Bearer", "dgcfhvgjygukhiluytkuy"]
   
@@ -38,9 +42,9 @@ export const authenticate = async (
 
   } catch (err) {
     console.error(err)
-    res.json({
+    return res.status(401).json({
       success: false,
-      message: "Invalid or expire token"
+      message: "Invalid or expired token"
     })
   }
 }
