@@ -92,15 +92,49 @@ export const getUserData = async (req: AuthRequest, res: Response): Promise<Resp
 };
 
 // Get All Cars for the Frontend
+// export const getCars = async (req: Request, res: Response): Promise<Response> => {
+//   try {
+//     const cars: ICAR[] = await Car.find({ isAvailable: true });
+//     return res.json({ success: true, cars });
+//   } catch (error: any) {
+//     console.error(error);
+//     return res.json({ success: false, message: error.message });
+//   }
+// };
+
+// Get All Cars for the Frontend (Paginated)
 export const getCars = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const cars: ICAR[] = await Car.find({ isAvailable: true });
-    return res.json({ success: true, cars });
+    const page = parseInt(req.query.page as string) || 1
+    const limit = parseInt(req.query.limit as string) || 6
+
+    const skip = (page - 1) * limit
+
+    const totalCars = await Car.countDocuments({ isAvailable: true })
+
+    const cars: ICAR[] = await Car.find({ isAvailable: true })
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+
+    return res.json({
+      success: true,
+      cars,
+      pagination: {
+        totalCars,
+        page,
+        limit,
+        totalPages: Math.ceil(totalCars / limit),
+        hasNextPage: page * limit < totalCars,
+        hasPrevPage: page > 1
+      }
+    })
   } catch (error: any) {
-    console.error(error);
-    return res.json({ success: false, message: error.message });
+    console.error(error)
+    return res.status(500).json({ success: false, message: error.message })
   }
-};
+}
+
 
 export const refreshToken = async (req:Request, res:Response) => {
   try{
