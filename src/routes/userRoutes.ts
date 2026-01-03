@@ -1,5 +1,5 @@
 import { Router } from "express"
-import {  getCars, getUserData, loginUser, refreshToken, registerUser } from "../controller/userController"
+import {  forgetPassword, getCars, getUserData, loginUser, refreshToken, registerUser, resetPassword } from "../controller/userController"
 import { authenticate } from "../middleware/auth"
 
 
@@ -11,5 +11,8 @@ router.get("/data", authenticate, getUserData )
 router.get("/cars", getCars )
 
 router.post("/refresh" , refreshToken)
+
+router.post('/forget-password', forgetPassword);
+router.put('/reset-password', resetPassword);
 
 export default router

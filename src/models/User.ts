@@ -12,6 +12,10 @@ export interface IUSER extends Document {
   password: string
   role: Role[]
   image: string
+
+  passwordResetToken?: string
+  passwordResetExpires?: number
+  comparePassword(candidatePassword: string): Promise<boolean>
 }
 
 const userSchema = new Schema<IUSER>({
@@ -20,6 +24,9 @@ const userSchema = new Schema<IUSER>({
     password: { type: String, required:true },
     role: { type: [String], enum: Object.values(Role), default: [Role.USER] },
     image: { type: String, default: '' },
+
+    passwordResetToken: { type: String },
+    passwordResetExpires: { type: Number }
 
 },{ timestamps: true })
 
