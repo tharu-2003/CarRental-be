@@ -51,7 +51,7 @@ export const registerUser = async (req: Request, res: Response): Promise<Respons
 export const loginUser = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { email, password } = req.body as { email: string; password: string };
-    connectDB();
+    
     const user = (await User.findOne({ email })) as IUSER | null;
     if (!user) {
       return res.json({ success: false, message: "Invalid credentials" });
