@@ -194,7 +194,8 @@ export const forgetPassword = async (req: Request, res: Response) => {
 
         console.log('✅ Token saved:', resetToken);
 
-        const resetURL = `http://localhost:5173/reset-password/${resetToken}`;
+        // const resetURL = `http://localhost:5173/reset-password/${resetToken}`;
+        const resetURL = `https://car-rental-fe-steel.vercel.app/reset-password/${resetToken}`;
 
         const resetEmailHtml = `
           <!DOCTYPE html>
