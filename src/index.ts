@@ -9,6 +9,8 @@ import connectCloudinary from "./config/cloudinary"
 import bookingRouter from "./routes/bookingRoutes"
 import connectDB from "./config/mongoDbConfig"
 
+import chatRouter from "./routes/chatRoutes"
+
 dotenv.config()
 
 const PORT = process.env.PORT || 5000
@@ -39,6 +41,7 @@ app.get('/', (req, res)=> res.send('Server is running'))
 app.use("/api/v1/user", userRouter)
 app.use('/api/v1/owner', ownerRouter)
 app.use('/api/v1/bookings', bookingRouter)
+app.use('/api/v1/chat', chatRouter)
 
 
 app.listen(PORT, ()=> console.log(`Server running on port ${PORT}`))
